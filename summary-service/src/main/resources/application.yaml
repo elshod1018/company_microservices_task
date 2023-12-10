@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: SECONDARY-SERVICE
+  datasource:
+    url: jdbc:h2:file:./trainer_workload
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
+server:
+  port: 9595
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8671/eureka
+resilience4j:
+  circuitbreaker:
+    instances:
+      mainServiceCircuit:
+        registerHealthIndicator: true
+        slidingWindowSize: 5
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 3
+        slowCallDurationThreshold: 1000
+logging:
+  pattern:
+    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+rabbitmq:
+  queue:
+    name: epam-rabbitmq-queue
+  exchange:
+    name: epam-rabbitmq-exchange
+  routing:
+    key: epam-rabbitmq-routing-key

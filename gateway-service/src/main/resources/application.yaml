@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: GATEWAY-SERVICE
+  cloud:
+    gateway:
+      routes:
+        - id: SECONDARY-SERVICE
+          uri: lb://SECONDARY-SERVICE
+          predicates:
+            - Path=/workload/**
+          filters:
+            - AuthFilter
+        - id: MAIN-SERVICE
+          uri: lb://MAIN-SERVICE
+          predicates:
+            - Path=/main/**
+          filters:
+            - AuthFilter
+        - id: AUTH-SERVICE
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/**
+          filters:
+            - AuthFilter
+server:
+  port: 8585
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8671/eureka
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+logging:
+  pattern:
+    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
+auth:
+  service:
+    baseUrl: http://AUTH-SERVICE/auth
