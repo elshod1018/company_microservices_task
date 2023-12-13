@@ -17,7 +17,7 @@ import java.util.function.Predicate;
 @Component
 public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> {
     private final AuthClient authClient;
-    public static final List<String> openApiEndpoints = List.of(
+    private static final List<String> openApiEndpoints = List.of(
             "/main/public/**",
             "/eureka/**",
             "/auth/**"
@@ -38,12 +38,9 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
             log.info("AuthFilter: {}", httpRequest.getURI().getPath());
             if (isSecured.test(httpRequest)) {
                 String authHeaders = getAuthorizationHeader(httpRequest);
-                try {
-                    boolean isValid = authClient.validateToken(authHeaders);
-                    if (!isValid)
-                        throw new RuntimeException("Invalid token");
-                } catch (Exception e) {
-                    throw new RuntimeException("Invalid token", e.getCause());
+                boolean isValid = authClient.validateToken(authHeaders);
+                if (!isValid) {
+                    throw new RuntimeException("Invalid token");
                 }
             }
             return chain.filter(exchange);

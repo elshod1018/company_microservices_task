@@ -1,18 +1,33 @@
 spring:
   application:
     name: AUTH-SERVICE
-  datasource:
-    url: jdbc:h2:file:./auth_users
-    username: sa
-    password: sa
-    driver-class-name: org.h2.Driver
+  #  datasource:
+  #    url: jdbc:h2:file:./auth_users
+  #    username: sa
+  #    password: sa
+  #    driver-class-name: org.h2.Driver
+  #  jpa:
+  #    show-sql: false
+  #    properties:
+  #      hibernate:
+  #        format_sql: false
+  #    hibernate:
+  #      ddl-auto: update
   jpa:
+    hibernate:
+      ddl-auto: none
     show-sql: false
     properties:
       hibernate:
-        format_sql: false
-    hibernate:
-      ddl-auto: update
+        default_schema: microservices
+  datasource:
+    url: jdbc:postgresql://localhost:5432/epam_tasks
+    username: postgres
+    password: 123
+    driver-class-name: org.postgresql.Driver
+    dbcp2:
+      default-schema: microservices
+
 server:
   port: 7575
 eureka:
