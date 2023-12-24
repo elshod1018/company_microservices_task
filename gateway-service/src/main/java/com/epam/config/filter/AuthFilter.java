@@ -6,6 +6,7 @@ import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 
@@ -35,13 +36,15 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             ServerHttpRequest httpRequest = exchange.getRequest();
-            log.info("AuthFilter: {}", httpRequest.getURI().getPath());
+            String path = httpRequest.getURI().getPath();
+            log.info("AuthFilter: {}", path);
             if (isSecured.test(httpRequest)) {
                 String authHeaders = getAuthorizationHeader(httpRequest);
                 boolean isValid = authClient.validateToken(authHeaders);
                 if (!isValid) {
                     throw new RuntimeException("Invalid token");
                 }
+
             }
             return chain.filter(exchange);
         };

@@ -1,18 +1,26 @@
 spring:
   application:
     name: AUTH-SERVICE
-  #  datasource:
-  #    url: jdbc:h2:file:./auth_users
-  #    username: sa
-  #    password: sa
-  #    driver-class-name: org.h2.Driver
-  #  jpa:
-  #    show-sql: false
-  #    properties:
-  #      hibernate:
-  #        format_sql: false
-  #    hibernate:
-  #      ddl-auto: update
+  profiles:
+    active: prod
+server:
+  port: 7575
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8671/eureka
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+logging:
+  pattern:
+    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
   jpa:
     hibernate:
       ddl-auto: none
@@ -27,25 +35,26 @@ spring:
     driver-class-name: org.postgresql.Driver
     dbcp2:
       default-schema: microservices
-
-server:
-  port: 7575
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8671/eureka
-management:
-  tracing:
-    sampling:
-      probability: 1.0
-logging:
-  pattern:
-    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
-main:
-  service:
-    baseUrl: http://MAIN-SERVICE/main
-    trainerUrl: ${main.service.baseUrl}/trainer
-    traineeUrl: ${main.service.baseUrl}/trainee
+jwt:
+  access:
+    token:
+      expiry: 150000000
+      secret:
+        key: 357638792F423F4528482B4D6250655368566D597133743677397A24432646294A404E635266546A576E5A7234753778214125442A472D4B6150645367566B58
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  datasource:
+    url: jdbc:h2:mem:main_service_db
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
 jwt:
   access:
     token:
@@ -53,17 +62,3 @@ jwt:
       secret:
         key: 357638792F423F4528482B4D6250655368566D597133743677397A24432646294A404E635266546A576E5A7234753778214125442A472D4B6150645367566B58
 
-rabbitmq:
-  queue:
-    name: epam-rabbitmq-queue
-  exchange:
-    name: epam-rabbitmq-exchange
-  routing:
-    key: epam-rabbitmq-routing-key
-  update-user:
-    queue:
-      name: update-user-queue
-    exchange:
-      name: update-user-exchange
-    routing:
-      key: update-user-routing-key

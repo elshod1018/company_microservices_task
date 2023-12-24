@@ -1,8 +1,28 @@
+server:
+  port: 9595
 spring:
+  profiles:
+    active: prod
   application:
     name: SECONDARY-SERVICE
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8671/eureka
+logging:
+  pattern:
+    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
   datasource:
-    url: jdbc:h2:file:./trainer_workload
+    url: jdbc:h2:file:./trainer_workload_prod
     username: sa
     password: sa
     driver-class-name: org.h2.Driver
@@ -12,36 +32,50 @@ spring:
       hibernate:
         format_sql: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
   h2:
     console:
       enabled: true
-server:
-  port: 9595
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8671/eureka
-resilience4j:
-  circuitbreaker:
-    instances:
-      mainServiceCircuit:
-        registerHealthIndicator: true
-        slidingWindowSize: 5
-        failureRateThreshold: 50
-        minimumNumberOfCalls: 3
-        slowCallDurationThreshold: 1000
-logging:
-  pattern:
-    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
-management:
-  tracing:
-    sampling:
-      probability: 1.0
+  rabbitmq:
+    listener:
+      simple:
+        retry:
+          enabled: true
+          initial-interval: 1s
+          max-attempts: 6
+          max-interval: 10s
+          multiplier: 1
 rabbitmq:
   queue:
-    name: epam-rabbitmq-queue
+    name: epam-rabbitmq-queue-prod
   exchange:
-    name: epam-rabbitmq-exchange
+    name: epam-rabbitmq-exchange-prod
   routing:
-    key: epam-rabbitmq-routing-key
+    key: epam-rabbitmq-routing-key-prod
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    url: jdbc:h2:mem:trainer_workload_test
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+    hibernate:
+      ddl-auto: create
+  h2:
+    console:
+      enabled: true
+rabbitmq:
+  queue:
+    name: epam-rabbitmq-queue-test
+  exchange:
+    name: epam-rabbitmq-exchange-test
+  routing:
+    key: epam-rabbitmq-routing-key-test

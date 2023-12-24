@@ -41,7 +41,6 @@ public class SecurityConfigurer {
                 .authorizeHttpRequests(antMatchers -> antMatchers
                         .requestMatchers(
                                 "/auth/**",
-                                "/h2-console/**",
                                 "/error")
                         .permitAll()
                         .anyRequest()

@@ -10,7 +10,4 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("select u from users u where u.username = ?1")
     Optional<User> findByUsername(String username);
-
-    @Query("select u from users u where (u.username ilike concat(?1,'-%') or u.username ilike ?1)")
-    List<User> findListByUsername(String username);
 }

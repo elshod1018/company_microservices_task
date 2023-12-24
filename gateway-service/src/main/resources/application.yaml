@@ -38,3 +38,12 @@ logging:
 auth:
   service:
     baseUrl: http://AUTH-SERVICE/auth
+resilience4j:
+  circuitbreaker:
+    instances:
+      authClientCircuit:
+        registerHealthIndicator: true
+        slidingWindowSize: 5
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 3
+        slowCallDurationThreshold: 1000

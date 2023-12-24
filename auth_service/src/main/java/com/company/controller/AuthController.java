@@ -2,7 +2,7 @@ package com.company.controller;
 
 import com.company.config.security.SessionUser;
 import com.company.domain.User;
-import com.company.dto.*;
+import com.company.dto.UserByUsername;
 import com.company.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,20 +29,6 @@ public class AuthController {
     public Boolean validateToken(@RequestParam(name = "token") String token) {
         log.info("Validating token");
         return userService.validateToken(token);
-    }
-
-    @PostMapping("/register/trainee")
-    @ResponseStatus(HttpStatus.CREATED)
-    public TraineeDTO registerTrainee(@RequestBody TraineeRegisterDTO dto) {
-        log.info("Registering trainee");
-        return userService.registerTrainee(dto);
-    }
-
-    @PostMapping("/register/trainer")
-    @ResponseStatus(HttpStatus.CREATED)
-    public TrainerDTO registerTrainer(@RequestBody TrainerRegisterDTO dto) {
-        log.info("Registering trainer");
-        return userService.registerTrainer(dto);
     }
 
     @GetMapping("/user")
