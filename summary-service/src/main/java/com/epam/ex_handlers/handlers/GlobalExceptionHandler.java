@@ -1,4 +1,4 @@
-package com.epam.handlers;
+package com.epam.ex_handlers.handlers;
 
 import com.epam.dto.AppErrorDTO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,10 +45,11 @@ public class GlobalExceptionHandler {
             String field = fieldError.getField();
             String message = fieldError.getDefaultMessage();
             errorBody.compute(field, (s, values) -> {
-                if (!Objects.isNull(values))
+                if (!Objects.isNull(values)) {
                     values.add(message);
-                else
+                } else {
                     values = new ArrayList<>(Collections.singleton(message));
+                }
                 return values;
             });
         }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
+    //spring boot security test
     private final UserService userService;
     private final SessionUser sessionUser;
 

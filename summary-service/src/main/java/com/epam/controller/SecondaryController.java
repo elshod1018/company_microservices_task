@@ -1,14 +1,13 @@
 package com.epam.controller;
 
+import com.epam.dto.TrainerWorkloadUpdateDTO;
 import com.epam.entity.TrainerWorkload;
 import com.epam.service.WorkloadService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.List;
 
 @Slf4j
@@ -18,10 +17,19 @@ import java.util.List;
 public class SecondaryController {
     private final WorkloadService workloadService;
 
-    @GetMapping("/summary")
-    public List<TrainerWorkload> summary(HttpServletRequest request) {
-        String authorization = request.getHeader("Authorization");
-        log.info("Trainer workload summary authorization: {}", authorization);
+    @GetMapping("/summary/all")
+    public List<TrainerWorkload> summary() {
+        log.info("Getting all workloads");
         return workloadService.getWorkloads();
+    }
+
+    @GetMapping("/summary/by-username")
+    public List<TrainerWorkload> byUsername(@RequestParam(name = "username") String username) throws UserPrincipalNotFoundException {
+        return workloadService.getWorkloadsByUsername(username);
+    }
+
+    @PutMapping("/summary/by-username")
+    public TrainerWorkload update(@RequestParam(name = "username") String username, @RequestBody TrainerWorkloadUpdateDTO dto) {
+        return workloadService.update(username, dto);
     }
 }

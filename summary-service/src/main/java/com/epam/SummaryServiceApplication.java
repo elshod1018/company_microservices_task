@@ -7,11 +7,13 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+@EnableFeignClients
 @EnableDiscoveryClient
 @SpringBootApplication
 public class SummaryServiceApplication {
@@ -31,4 +33,7 @@ public class SummaryServiceApplication {
         return objectMapper;
     }
 
+    // code coverage test 45%,
+    // spring data testing(mockito no need) test crud operations repository,
+    // cover workloadService
 }

@@ -1,36 +1,41 @@
 package com.epam.entity;
 
-import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDate;
 
+@Document(collection = "trainer_workload")
 @Getter
 @Setter
-@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrainerWorkload {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @Column(nullable = false)
+    private String id;
+    @Size(min = 2, max = 50, message = "Username must be between 2 and 30 characters")
     private String username;
 
-    @Column(nullable = false)
+    @Field(name = "first_name")
+    @Indexed
+    @NotNull(message = "First name cannot be null")
     private String firstName;
 
-    @Column(nullable = false)
+    @Field(name = "last_name")
+    @NotNull(message = "Last name cannot be null")
     private String lastName;
 
+    @Field(name = "is_active")
     private boolean active;
 
-    @Column(nullable = false)
     private LocalDate date;
 
-    @Column(nullable = false)
     private Integer duration;
 
 }
