@@ -2,7 +2,7 @@ spring:
   application:
     name: AUTH-SERVICE
   profiles:
-    active: test
+    active: dev
 server:
   port: 7575
 eureka:
@@ -20,21 +20,21 @@ logging:
 spring:
   config:
     activate:
-      on-profile: prod
+      on-profile: dev
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: false
     properties:
       hibernate:
-        default_schema: microservices
+        default_schema: testing_module
   datasource:
     url: jdbc:postgresql://localhost:5432/epam_tasks
     username: postgres
     password: 123
     driver-class-name: org.postgresql.Driver
     dbcp2:
-      default-schema: microservices
+      default-schema: testing_module
 jwt:
   access:
     token:
@@ -45,21 +45,21 @@ jwt:
 spring:
   config:
     activate:
-      on-profile: test
+      on-profile: prod
   jpa:
     hibernate:
       ddl-auto: none
     show-sql: false
     properties:
       hibernate:
-        default_schema: microservices_test
+        default_schema: testing_module_prod
   datasource:
     url: jdbc:postgresql://localhost:5432/epam_tasks
     username: postgres
     password: 123
     driver-class-name: org.postgresql.Driver
     dbcp2:
-      default-schema: microservices_test
+      default-schema: testing_module_prod
 jwt:
   access:
     token:

@@ -33,7 +33,8 @@ public class SummaryServiceApplication {
         return objectMapper;
     }
 
-    // code coverage test 45%,
-    // spring data testing(mockito no need) test crud operations repository,
-    // cover workloadService
+    @Bean
+    public ObjectMapper objectMapper2() {
+        return new ObjectMapper();
+    }
 }

@@ -29,7 +29,7 @@ spring:
       on-profile: prod
   data:
     mongodb:
-      uri: mongodb://localhost:27017/secondary_service_prod
+      uri: mongodb://localhost:27017/secondary_service_testing_module
   rabbitmq:
     listener:
       simple:
@@ -53,7 +53,7 @@ spring:
       on-profile: test
   data:
     mongodb:
-      uri: mongodb://localhost:27017/secondary_service_test
+      uri: mongodb://localhost:27017/secondary_service_testing_module
   rabbitmq:
     listener:
       simple:
