@@ -1,8 +1,9 @@
 server:
   port: 9595
+PROFILE: dev
 spring:
   profiles:
-    active: prod
+    active: ${PROFILE}
   application:
     name: SECONDARY-SERVICE
 eureka:
@@ -29,7 +30,9 @@ spring:
       on-profile: prod
   data:
     mongodb:
-      uri: mongodb://localhost:27017/secondary_service_testing_module
+      uri: mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}
+      username: ${DB_USER}
+      password: ${DB_PASSWORD}
   rabbitmq:
     listener:
       simple:
@@ -41,19 +44,19 @@ spring:
           multiplier: 1
 rabbitmq:
   queue:
-    name: epam-rabbitmq-queue-prod
+    name: ${RABBIT_MQ_QUEUE_NAME}
   exchange:
-    name: epam-rabbitmq-exchange-prod
+    name: ${RABBIT_MQ_EXCHANGE_NAME}
   routing:
-    key: epam-rabbitmq-routing-key-prod
+    key: ${RABBIT_MQ_ROUTING_KEY}
 ---
 spring:
   config:
     activate:
-      on-profile: test
+      on-profile: dev
   data:
     mongodb:
-      uri: mongodb://localhost:27017/secondary_service_testing_module
+      uri: mongodb://localhost:27017/secondary_service_aws
   rabbitmq:
     listener:
       simple:
@@ -65,8 +68,8 @@ spring:
           multiplier: 2
 rabbitmq:
   queue:
-    name: epam-rabbitmq-queue-test
+    name: epam-rabbitmq-queue-dev
   exchange:
-    name: epam-rabbitmq-exchange-test
+    name: epam-rabbitmq-exchange-dev
   routing:
-    key: epam-rabbitmq-routing-key-test
+    key: epam-rabbitmq-routing-key-dev

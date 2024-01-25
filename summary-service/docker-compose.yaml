@@ -1,0 +1,53 @@
+version: '1.0'
+services:
+  mongodb:
+    container_name: secondary_service_mongo
+    image: mongo
+    restart: always
+    hostname: mongodb
+    environment:
+      MONGO_INITDB_DATABASE: secondary_service_aws
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 123
+    ports:
+      - '27018:27017'
+    volumes:
+      - mongo-data:/var/lib/mongo/data
+  message-queue:
+    container_name: secondary_service_rabbitmq
+    image: rabbitmq:3.12-management
+    restart: always
+    environment:
+      MQ_USER: guest
+      MQ_PASSWORD: guest
+    ports:
+      - '15672:15672'
+      - '5672:5672'
+  app:
+    image: secondary_service
+    container_name: secondary_service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - mongodb
+      - message-queue
+    restart: on-failure
+    environment:
+      PROFILE: prod
+      DB_HOST: mongodb
+      DB_PORT: 27017
+      DB_NAME: secondary_service_aws
+      DB_USER: root
+      DB_PASSWORD: 123
+      MQ_HOST: message-queue
+      MQ_PORT: 5672
+      MQ_USER: guest
+      MQ_PASSWORD: guest
+      RABBIT_MQ_QUEUE_NAME: epam-rabbitmq-queue-prod
+      RABBIT_MQ_EXCHANGE_NAME: epam-rabbitmq-exchange-prod
+      RABBIT_MQ_ROUTING_KEY: epam-rabbitmq-routing-key-prod
+    ports:
+      - "9595:9595"
+volumes:
+  mongo-data:
